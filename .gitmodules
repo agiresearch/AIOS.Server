@@ -1,0 +1,3 @@
+[submodule "cerebrum"]
+	path = cerebrum
+	url = https://github.com/agiresearch/Cerebrum.Server
