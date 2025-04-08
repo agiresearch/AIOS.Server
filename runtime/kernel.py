@@ -1,7 +1,7 @@
 from typing_extensions import Literal
 from fastapi import FastAPI, HTTPException, Request
-from pydantic import BaseModel, Field, root_validator
-from typing import Optional, Dict, Any, Union
+from pydantic import BaseModel
+from typing import Optional, Dict, Any
 from dotenv import load_dotenv
 import traceback
 import json
@@ -19,12 +19,6 @@ from aios.hooks.syscall import useSysCall
 from aios.config.config_manager import config
 
 from cerebrum.llm.communication import LLMQuery
-
-from cerebrum.memory.communication import MemoryQuery
-
-from cerebrum.tool.communication import ToolQuery
-
-from cerebrum.storage.communication import StorageQuery
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -110,38 +104,10 @@ class AgentSubmit(BaseModel):
     agent_config: Dict[str, Any]
 
 
-# class QueryRequest(BaseModel):
-#     agent_name: str
-#     query_type: Literal["llm", "tool", "storage", "memory"]
-#     query_data: ToolQuery | StorageQuery | MemoryQuery | LLMQuery 
-
 class QueryRequest(BaseModel):
     agent_name: str
     query_type: Literal["llm", "tool", "storage", "memory"]
-    query_data: LLMQuery | ToolQuery | StorageQuery | MemoryQuery
-
-    @root_validator(pre=True)
-    def convert_query_data(cls, values: dict[str, Any]) -> dict[str, Any]:
-        if 'query_type' not in values or 'query_data' not in values:
-            return values
-            
-        query_type = values['query_type']
-        query_data = values['query_data']
-        
-        type_mapping = {
-            'llm': LLMQuery,
-            'tool': ToolQuery,
-            'storage': StorageQuery,
-            'memory': MemoryQuery
-        }
-        
-        if isinstance(query_data, type_mapping[query_type]):
-            return values
-            
-        if isinstance(query_data, dict):
-            values['query_data'] = type_mapping[query_type](**query_data)
-            
-        return values
+    query_data: LLMQuery
 
 
 def initialize_components():
@@ -332,8 +298,9 @@ async def setup_agent_factory(config: SchedulerConfig):
             "await": await_agent_execution,
         }
 
+        #print(active_components["llm"].model)
+
         return {"status": "success", "message": "Agent factory initialized"}
-    
     except Exception as e:
         print(f"Agent factory setup failed: {str(e)}")
         raise HTTPException(
@@ -503,14 +470,6 @@ async def handle_query(request: QueryRequest):
                 action_type=request.query_data.action_type,
                 message_return_type=request.query_data.message_return_type,
             )
-            return send_request(request.agent_name, query)
-        elif request.query_type == "storage":
-            query = StorageQuery(
-                messages=request.query_data.messages,
-                operation_type=request.query_data.operation_type
-            )
-            # return send_request(request.agent_name, query)
-            # return {"status": "success", "message": "Storage query received"}
             return send_request(request.agent_name, query)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

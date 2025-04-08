@@ -207,6 +207,3 @@ cache
 
 # Ignore configuration files
 aios/config/config.yaml
-
-# ignore cerebrum
-Cerebrum/*

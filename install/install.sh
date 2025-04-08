@@ -60,14 +60,8 @@ python -m pip install --upgrade pip
 
 pip install -r "$INSTALL_DIR/src/requirements.txt"
 
-# Remove non-kernel files but preserve necessary scripts
-mkdir -p "$INSTALL_DIR/src/scripts_temp"
-cp "$INSTALL_DIR/src/scripts/list_agents.py" "$INSTALL_DIR/src/scripts_temp/"
+# Remove non-kernel files
 rm -rf "$INSTALL_DIR/src/scripts"
-mkdir -p "$INSTALL_DIR/src/scripts"
-mv "$INSTALL_DIR/src/scripts_temp/list_agents.py" "$INSTALL_DIR/src/scripts/"
-rm -rf "$INSTALL_DIR/src/scripts_temp"
-
 rm -rf "$INSTALL_DIR/src/tests"
 rm -rf "$INSTALL_DIR/src/docs"
 
@@ -105,14 +99,14 @@ start() {
         return
     fi
     source "$INSTALL_DIR/venv/bin/activate"
-
+    
     # Check Python version before starting
     PYTHON_VERSION=$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
     if [[ ! "$PYTHON_VERSION" =~ ^3\.(10|11)$ ]]; then
         echo "Error: Unsupported Python version $PYTHON_VERSION. Only Python 3.10 or 3.11 are supported."
         return 1
     fi
-
+    
     load_env
     cd "$INSTALL_DIR/src"
     nohup uvicorn runtime.kernel:app --reload > "$INSTALL_DIR/server.log" 2>&1 &
@@ -139,13 +133,13 @@ restart() {
 
 update() {
     echo "Checking for updates..."
-
+    
     # Stop server if running
     if [ -f "$PID_FILE" ]; then
         echo "Stopping server for update..."
         stop
     fi
-
+    
     # Check Python version before updating
     source "$INSTALL_DIR/venv/bin/activate"
     PYTHON_VERSION=$(python -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
@@ -153,43 +147,43 @@ update() {
         echo "Error: Unsupported Python version $PYTHON_VERSION. Only Python 3.10 or 3.11 are supported."
         return 1
     fi
-
+    
     # Store current commit hash
     cd "$INSTALL_DIR/src"
     current_hash=$(git rev-parse HEAD)
-
+    
     # Fetch and pull latest changes
     git fetch origin
     remote_hash=$(git rev-parse origin/$(git rev-parse --abbrev-ref HEAD))
-
+    
     if [ "$current_hash" = "$remote_hash" ]; then
         echo "Already up to date!"
         start
         return
     fi
-
+    
     echo "Updates found, installing..."
-
+    
     # Pull latest changes
     git pull
-
+    
     # Activate venv and update dependencies
     pip install -r requirements.txt
-
+    
     # Remove any new non-kernel files that might have been added
     rm -rf "$INSTALL_DIR/src/scripts"
     rm -rf "$INSTALL_DIR/src/tests"
     rm -rf "$INSTALL_DIR/src/docs"
-
+    
     rm -f "$INSTALL_DIR/src/requirements-cuda.txt"
     rm -f "$INSTALL_DIR/src/.dockerignore"
     rm -f "$INSTALL_DIR/src/.env.example"
     rm -f "$INSTALL_DIR/src/.precommit-config.yaml"
     rm -f "$INSTALL_DIR/src/README.md"
     rm -f "$INSTALL_DIR/src/Dockerfile"
-
+    
     echo "Update complete!"
-
+    
     # Restart server
     start
 }
@@ -197,18 +191,18 @@ update() {
 clean() {
     # First stop everything
     stop
-
+    
     # Deactivate virtual environment if active
     if [ -n "$VIRTUAL_ENV" ]; then
         deactivate
     fi
-
+    
     # Remove the installation directory
     rm -rf "$INSTALL_DIR"
-
+    
     # Remove the executable
     rm -f "$HOME/.local/bin/aios"
-
+    
     echo "AIOS installation cleaned up successfully"
 }
 
@@ -216,17 +210,17 @@ env_add() {
     echo "Adding new environment variable"
     echo "Enter variable name (e.g., API_KEY):"
     read varname
-
+    
     # Validate variable name
     if [[ ! $varname =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
         echo "Invalid variable name. Use only letters, numbers, and underscores, and start with a letter or underscore."
         return 1
     fi
-
+    
     echo "Enter variable value:"
     read -s varvalue  # -s flag hides the input (good for sensitive values)
     echo  # Add newline after hidden input
-
+    
     # Check if variable already exists
     if grep -q "^$varname=" "$ENV_FILE" 2>/dev/null; then
         echo "Variable $varname already exists. Do you want to update it? (y/n)"
@@ -238,7 +232,7 @@ env_add() {
         # Remove old value
         sed -i.bak "/^$varname=/d" "$ENV_FILE" && rm "$ENV_FILE.bak"
     fi
-
+    
     # Add new value
     echo "$varname=$varvalue" >> "$ENV_FILE"
     echo "Environment variable added successfully"
@@ -261,7 +255,7 @@ env_remove() {
         echo ""
         echo "Enter the number of the variable to remove:"
         read varnum
-
+        
         if [[ "$varnum" =~ ^[0-9]+$ ]]; then
             varname=$(sed -n "${varnum}p" "$ENV_FILE" | cut -d= -f1)
             if [ -n "$varname" ]; then
@@ -341,31 +335,6 @@ HELP
                 ;;
         esac
         ;;
-    "agents")
-        case "$2" in
-            "list")
-                # Activate virtual environment and run Python script
-                source "$INSTALL_DIR/venv/bin/activate"
-                python "$INSTALL_DIR/src/scripts/list_agents.py"
-                ;;
-            *)
-                cat << 'HELP'
-Agent Management
-
-Usage: aios agents <subcommand>
-
-Subcommands:
-  list    List all available agents
-          - Shows Cerebrum built-in agents
-          - Shows cached agents from previous installations
-          - Shows available agents to install from AIOS foundation
-          - Displays versions and sources for each agent
-
-Note: Requires active internet connection for online agent listing
-HELP
-                ;;
-        esac
-        ;;
     "clean")
         clean
         ;;
@@ -404,14 +373,6 @@ Commands:
                   remove  - Remove a variable (interactive)
                 Environment changes require server restart to take effect
 
-  agents        Manage AIOS agents
-                Subcommands:
-                  list    - List all available agents
-                          • Shows Cerebrum built-in agents
-                          • Shows cached agents from previous installations
-                          • Shows available agents to install from AIOS foundation
-                          • Displays versions and sources for each agent
-
   clean         Uninstall AIOS completely
                 - Stops any running server
                 - Removes all AIOS files and configurations
@@ -422,7 +383,6 @@ Commands:
 Examples:
   aios start             # Start the server
   aios env add          # Add a new API key or configuration value
-  aios agents list      # View all available agents
   aios update           # Update to the latest version
 
 Notes:

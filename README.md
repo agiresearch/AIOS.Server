@@ -29,8 +29,6 @@ Below shows how agents utilize AIOS SDK to interact with AIOS kernel and how AIO
 </p>
 
 ## 📰 News
-- **[2025-02-07]** 🔥 Our paper [From Commands to Prompts: LLM-based Semantic File System for AIOS](https://arxiv.org/abs/2410.11843) has been accepted by ICLR2025! The features of this paper has been integrated into AIOS as the **Terminal UI**. 
-- **[2025-01-27]** 🔥 Deepseek-r1 (1.5b, 7b, 8b, 14b, 32b, 70b, 671b) has already been supported in AIOS, both open-sourced versions and deepseek apis (deepseek-chat and deepseek-reasoner) are available. 
 - **[2024-11-30]** 🔥 AIOS v0.2: Disentangled AIOS Kernel (this [AIOS](https://github.com/agiresearch/AIOS) repository) and AIOS SDK (The [Cerebrum](https://github.com/agiresearch/Cerebrum) repository), Remote Kernel for agent users. 
 - **[2024-09-01]** 🔥 AIOS supports multiple agent creation frameworks (e.g., ReAct, Reflexion, OpenAGI, AutoGen, Open Interpreter, MetaGPT). Agents created by these frameworks can onboard AIOS. Onboarding guidelines can be found at the [Doc](https://docs.aios.foundation/aios-docs/aios-agent/how-to-develop-agents).
 - **[2024-07-10]** 📖 AIOS documentation is up, which can be found at [Website](https://docs.aios.foundation/).
@@ -131,7 +129,6 @@ You need API keys for services like OpenAI, Anthropic, Groq and HuggingFace. The
 
 A simple example to set up your API keys in `aios/config/config.yaml` is shown below:
 ```yaml
-deepseek: "your-deepseek-key"
 openai: "your-openai-key"
 gemini: "your-gemini-key"
 groq: "your-groq-key"
@@ -142,12 +139,11 @@ huggingface:
 ```
 
 To obtain these API keys:
-1. Deepseek API: Visit https://api-docs.deepseek.com/
-2. OpenAI API: Visit https://platform.openai.com/api-keys
-3. Google Gemini API: Visit https://makersuite.google.com/app/apikey
-4. Groq API: Visit https://console.groq.com/keys
-5. HuggingFace Token: Visit https://huggingface.co/settings/tokens
-6. Anthropic API: Visit https://console.anthropic.com/keys
+1. OpenAI API: Visit https://platform.openai.com/api-keys
+2. Google Gemini API: Visit https://makersuite.google.com/app/apikey
+3. Groq API: Visit https://console.groq.com/keys
+4. HuggingFace Token: Visit https://huggingface.co/settings/tokens
+5. Anthropic API: Visit https://console.anthropic.com/keys
 
 **Use ollama Models:** If you would like to use ollama, you need to download ollama from from https://ollama.com/.
 Then pull the available models you would like to use from https://ollama.com/library
@@ -196,7 +192,6 @@ Alternatively, you can set them as environment variables directly:
   The server must be running.
 
 When no environment variables are set, the following API keys will be shown:
-- `DEEPSEEK_API_KEY`: Deepseek API key for accessing Deepseek services
 - `OPENAI_API_KEY`: OpenAI API key for accessing OpenAI services
 - `GEMINI_API_KEY`: Google Gemini API key for accessing Google's Gemini services
 - `GROQ_API_KEY`: Groq API key for accessing Groq services
@@ -266,23 +261,7 @@ python3.x -m uvicorn runtime.kernel:app --host 0.0.0.0 & 2>&1 > MYLOGFILE.txt
 
 And you can run it even after the shell closes by typing `nohup` before the entire command.
 
-Then you can start the client provided by the AIOS SDK either in the terminal or in the WebUI. 
-
-To interact with the AIOS terminal (LLM-based semantic file system), you can run the following command to start the LSFS terminal.
-
-```
-python scripts/run_terminal.py
-```
-
-Then you can start interacting with the AIOS terminal by typing natural language commands. 
-
-If you successfully start the AIOS terminal, it will be shown as below: 
-
-<p align="center">
-<img src="docs/assets/terminal-figs/example.png" width=800>
-</p>
-
-Detailed instructions of how to use the AIOS terminal can be found at [here](https://github.com/agiresearch/AIOS-LSFS)
+Then you can start the client provided by the AIOS SDK either in the terminal or in the WebUI. The instructions can be found at [here](https://github.com/agiresearch/Cerebrum)
 
 ### Supported Agent Frameworks
 - [OpenAGI](https://github.com/agiresearch/openagi)
@@ -293,8 +272,6 @@ Detailed instructions of how to use the AIOS terminal can be found at [here](htt
 ### Supported LLM Cores
 | Provider 🏢 | Model Name 🤖 | Open Source 🔓 | Model String ⌨️ | Backend ⚙️ | Required API Key |
 |:------------|:-------------|:---------------|:---------------|:---------------|:----------------|
-| Deepseek | Deepseek-reasoner | ❌ | deepseek-reasoner |deepseek | DEEPSEEK_API_KEY |
-| Deepseek | Deepseek-chat | ❌ | deepseek-chat |deepseek | DEEPSEEK_API_KEY |
 | Anthropic | Claude 3.5 Sonnet | ❌ | claude-3-5-sonnet-20241022 |anthropic | ANTHROPIC_API_KEY |
 | Anthropic | Claude 3.5 Haiku | ❌ | claude-3-5-haiku-20241022 |anthropic | ANTHROPIC_API_KEY |
 | Anthropic | Claude 3 Opus | ❌ | claude-3-opus-20240229 |anthropic | ANTHROPIC_API_KEY |
@@ -324,20 +301,11 @@ Detailed instructions of how to use the AIOS terminal can be found at [here](htt
 | vLLM | [All Models](https://docs.vllm.ai/en/latest/) | ✅ | model-name |vllm| - |
 | HuggingFace | [All Models](https://huggingface.co/models/) | ✅ | model-name |huggingface| HF_HOME |
 
-
-
-## Reference
+## 🖋️ References
 ```
-@inproceedings{shi2025from,
-  title={From Commands to Prompts: {LLM}-based Semantic File System for AIOS},
-  author={Zeru Shi and Kai Mei and Mingyu Jin and Yongye Su and Chaoji Zuo and Wenyue Hua and Wujiang Xu and Yujie Ren and Zirui Liu and Mengnan Du and Dong Deng and Yongfeng Zhang},
-  booktitle={The Thirteenth International Conference on Learning Representations},
-  year={2025},
-  url={https://openreview.net/forum?id=2G021ZqUEZ}
-}
 @article{mei2024aios,
   title={AIOS: LLM Agent Operating System},
-  author={Mei, Kai and Zhu, Xi and Xu, Wujiang and Hua, Wenyue and Jin, Mingyu and Li, Zelong and Xu, Shuyuan and Ye, Ruosong and Ge, Yingqiang and Zhang, Yongfeng}
+  author={Mei, Kai and Li, Zelong and Xu, Shuyuan and Ye, Ruosong and Ge, Yingqiang and Zhang, Yongfeng}
   journal={arXiv:2403.16971},
   year={2024}
 }
