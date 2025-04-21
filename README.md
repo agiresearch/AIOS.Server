@@ -6,7 +6,7 @@
 
 ## 🌐 Introduction to AIOS Distributed Node Service
 
-Note: this repository inlcudes Cerebrum.Server (AIOS SDK) as a submodule (https://github.com/agiresearch/Cerebrum.Server). Be sure to read the README of Cerebrum.Server before using this repository.
+✅ Notice: this repository inlcudes Cerebrum.Server (AIOS SDK) as a submodule (https://github.com/agiresearch/Cerebrum.Server). Be sure to read the README of Cerebrum.Server before using this repository.
 
 AIOS Registry Node is a key component of the [AIOS (AI Agent Operating System)](https://github.com/agiresearch/AIOS.Server) ecosystem, providing decentralized agent execution and node management capabilities. With the Registry Node service, you can:
 
