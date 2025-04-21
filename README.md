@@ -1,13 +1,23 @@
-# AIOS: AI Agent Operating System
+# Planet as a Brain: Towards Decentralized Internet of AgentSites based on AIOS Server
 
-<a href='https://arxiv.org/abs/2403.16971'><img src='https://img.shields.io/badge/Paper-PDF-red'></a>
-<a href='https://arxiv.org/abs/2312.03815'><img src='https://img.shields.io/badge/Paper-PDF-blue'></a>
-<a href='https://docs.aios.foundation/'><img src='https://img.shields.io/badge/Documentation-AIOS-green'></a>
+<a href='https://docs.aios.foundation/'><img src='https://img.shields.io/badge/Documentation-Cerebrum-green'></a>
 [![Code License](https://img.shields.io/badge/Code%20License-MIT-orange.svg)](https://github.com/agiresearch/AIOS/blob/main/LICENSE)
 <a href='https://discord.gg/B2HFxEgTJX'><img src='https://img.shields.io/badge/Community-Discord-8A2BE2'></a>
-[![Gurubase](https://img.shields.io/badge/Gurubase-Ask%20AIOS%20Guru-006BFF)](https://gurubase.io/g/aios)
 
-<a href="https://trendshift.io/repositories/8908" target="_blank"><img src="https://trendshift.io/api/badge/repositories/8908" alt="agiresearch%2FAIOS | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+## 🌐 Introduction to AIOS Distributed Node Service
+
+Note: this repository inlcudes Cerebrum.Server (AIOS SDK) as a submodule (https://github.com/agiresearch/Cerebrum.Server). Be sure to read the README of Cerebrum.Server before using this repository.
+
+AIOS Registry Node is a key component of the [AIOS (AI Agent Operating System)](https://github.com/agiresearch/AIOS.Server) ecosystem, providing decentralized agent execution and node management capabilities. With the Registry Node service, you can:
+
+- Contribute your computing resources as nodes to the AIOS network
+- Deploy and execute AI agents in a distributed manner
+- Join the global AIOS node network, participating in P2P agent discovery and execution
+- Utilize DHT and Gossip protocols for efficient inter-node agent state synchronization
+
+Registry Node service uses Distributed Hash Tables (DHT) and Gossip protocols to implement efficient, reliable agent discovery and state synchronization, ensuring nodes can work together in a distributed environment.
+
+## 🌐 Introduction to AIOS
 
 AIOS is the AI Agent Operating System, which embeds large language model (LLM) into the operating system and facilitates the development and deployment of LLM-based AI Agents. AIOS is designed to address problems (e.g., scheduling, context switch, memory management, storage management, tool management, Agent SDK management, etc.) during the development and deployment of LLM-based agents, towards a better AIOS-Agent ecosystem for agent developers and agent users. AIOS includes the AIOS Kernel (this [AIOS](https://github.com/agiresearch/AIOS) repository) and the AIOS SDK (the [Cerebrum](https://github.com/agiresearch/Cerebrum) repository). AIOS supports both Web UI and Terminal UI.
 
